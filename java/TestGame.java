@@ -25,9 +25,11 @@ public class TestGame {
                 players[i] = new BetterPlayer();
             } else if (args[i].equalsIgnoreCase("Human")) {
                 players[i] = new OthelloDisplay(which++);
-            } else if(args[i].equalsIgnoreCase("BasePlayer")) {
+            } else if(args[i].equalsIgnoreCase("BasePlayer")) { // minimal functionality
             	players[i] = new BasePlayer();
-            } else if(args[i].equalsIgnoreCase("Minimax")) {
+            } else if (args[i].equalsIgnoreCase("GoodPlayer")) { // good enough to beat simple player
+            	players[i] = new GoodPlayer();
+            } else if(args[i].equalsIgnoreCase("Minimax")) { // implements minimax algorithm
             	players[i] = new MinimaxPlayer();
             } else {
                 players[i] = new WrapperPlayer(args[i]);
