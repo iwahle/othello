@@ -44,8 +44,11 @@ class BasePlayer implements OthelloPlayer{
 	 **/
 	public Move doMove(Move opponentsMove, long millisLeft)
 	{
+		// If it is the other player's turn, have them move
 		if (opponentsMove != null) {board.move(opponentsMove, mySide.opposite());}
+		// If there are no valid board spaces left, then return null
 		if (board.isDone()){return null;}
+		// If there are no valid moves for this player, then return null.
 		if (!(board.hasMoves(mySide))){return null;}
 		
 		boolean foundMove = false;

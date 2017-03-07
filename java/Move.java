@@ -14,6 +14,8 @@ public class Move implements Serializable
 {
    private int x, y;
 
+   private int dim = 8;
+   
    /**
     * Creates a new <code>Move</code> object.
     *
@@ -69,6 +71,76 @@ public class Move implements Serializable
       return (x == m.getX() && y == m.getY());
    }
 
+   /**
+    * Checks is move is a corner piece
+    **/
+   
+   public boolean isCornerMove()
+   {
+	   if (x == 0 && y == 0)
+		   return true;
+	   
+	   if (x == dim-1 && y == dim-1)
+		   return true;
+	   
+	   if (x == dim-1 && y == 0)
+		   return true;
+	   
+	   if (x == 0 && y == dim-1)
+		   return true;
+	   
+	   return false;
+   }
+   
+   public boolean isCornerOfCornerMove() {
+	   if (x == 1 && y == 1)
+		   return true;
+	   
+	   if (x == dim-2 && y == dim-2)
+		   return true;
+	   
+	   if (x == dim-2 && y == 1)
+		   return true;
+	   
+	   if (x == 1 && y == dim-2)
+		   return true;
+	   
+	   return false;
+   }
+   
+   public boolean isEdgeOfCornerMove() {
+	   if ((x == 1 && y == 0) || (x == 0 && y == 1))
+		   return true;
+	   
+	   if ((x == dim-2 && y == 0) || (x == 0 && y == dim-2))
+		   return true;
+	   
+	   if ((x == 1 && y == dim-1) || (x == dim-1 && y == 1))
+		   return true;
+	   
+	   if ((x == dim-1 && y == dim-2) || (x == dim-2 && y == dim-1))
+		   return true;
+	   
+	   return false;
+   }
+   
+   public boolean isGoodEdgeMove() {
+	   
+	   if (x == 0 && (y > 1 && y < dim-2))
+		   return true;
+	   
+	   if (x == dim-1 && (y > 1 && y < dim-2))
+		   return true;
+	   
+	   if (y == 0 && (x > 1 && x < dim-2))
+		   return true;
+	   
+	   if (y == dim-1 && (x > 1 && x < dim-2))
+		   return true;
+	   
+	   return false;
+   }
+   
    /**
     * The hashCode of a move is 8*y+x.
     **/

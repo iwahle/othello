@@ -121,7 +121,35 @@ public class OthelloBoard
       }
       return false;
    }
+   
+   /**
+    * Returns a score for a valid given move.
+    * @param m The move being made
+    * @param turn The player making the move.
+    **/
 
+   public double moveScore(Move m, OthelloSide turn) {
+	  double score = 1.0;
+	  
+	  if (m.isCornerMove()) {
+		  score *= 10;
+	  }
+	  
+	  if (m.isCornerOfCornerMove()) {
+		  score *= -10;
+	  }
+	  
+	  if (m.isEdgeOfCornerMove()) {
+		  score *= -5;
+	  }
+	  
+	  if (m.isGoodEdgeMove()) {
+		  score *= 5;
+	  }
+	  
+      return score;
+   }
+   
    /**
     * Modifies the board to reflect the specified move.
     * @param m The move being made

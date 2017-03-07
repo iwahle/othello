@@ -27,7 +27,9 @@ public class TestGame {
                 players[i] = new OthelloDisplay(which++);
             } else if(args[i].equalsIgnoreCase("BasePlayer")) {
             	players[i] = new BasePlayer();
-            } else {
+            } else if(args[i].equalsIgnoreCase("GoodPlayer")) {
+            	players[i] = new GoodPlayer();
+            }else {
                 players[i] = new WrapperPlayer(args[i]);
             }             
         }
