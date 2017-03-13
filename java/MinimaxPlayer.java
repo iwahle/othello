@@ -1,14 +1,13 @@
-import java.util.*;
 
 
 
 class MinimaxPlayer implements OthelloPlayer {
-	
+
 	private OthelloBoard board;
 	private int dim = 8;
 	private OthelloSide mySide;
-	private List<TreeNode> leafList;
-	
+
+
 	/**
 	 * Initialize the AI.
 	 * @param side Set to either OthelloSide.BLACK or
@@ -17,8 +16,6 @@ class MinimaxPlayer implements OthelloPlayer {
 	public void init(OthelloSide side){
 		board = new OthelloBoard();
 		mySide = side;
-		leafList = new ArrayList<TreeNode>();
-		
 	}
 
 	/**
@@ -44,62 +41,106 @@ class MinimaxPlayer implements OthelloPlayer {
 	 * if you have no valid moves.
 	 **/
 	public Move doMove(Move opponentsMove, long millisLeft){
-		
+		//register opponents move on our board
 		if (opponentsMove != null) {board.move(opponentsMove, mySide.opposite());}
+		//check if games over or can't move
 		if (board.isDone()){return null;}
 		if (!(board.hasMoves(mySide))){return null;}
-		TreeNode root = new TreeNode(null, opponentsMove, mySide.opposite(), 0, board);
-		leafList.clear();
-		minimax(2, root, mySide.opposite());
-		TreeNode bestNode = leafList.get(0);
-		double bestScore = bestNode.getScore();
-		for (TreeNode node : leafList){ //finds leaf node with largest score
-			if (node.getScore() > bestScore){
-				bestScore = node.getScore();
-				bestNode = node;
+		//make node with opps move
+		OthelloTreeNode root = new OthelloTreeNode(null, opponentsMove, mySide.opposite(), 0, board, 0); //left depth as 0 for now
+		//create tree of given depth with opps move node as root
+		generateTree(5, root);
+		//traverse tree in post order updating scores
+		tallyScores(root); //update all scores based on optimized children
+		//find child from root with best score to return move of
+		Move toRet = null;
+		for (OthelloTreeNode kid : root.getKids()){
+			if (kid.getScore() == root.getScore()){toRet = kid.getMove();}
+		}
+		//register chosen move on our board
+		board.move(toRet, mySide);
+		return toRet; //go through the roots children and find the one with the optimal score to return
+
+
+	}
+	/**
+	    * Returns nothing.
+	    * Recursively traverses tree in post-order, updating scores of nodes based on 
+	    * optimal score of it's children nodes. "Optimal" depends on player turn.
+	    * @param OthelloTreeNode currNode, node to choose optimal score for.
+	    **/
+	public void tallyScores(OthelloTreeNode currNode){
+		// base case, reached a leaf
+		if (currNode.getKids().isEmpty()){
+			return;
+		}
+		// recursively call this function on each child
+		for (OthelloTreeNode kid : currNode.getKids()){
+			tallyScores(kid);
+		}
+		// set current node's score as the score of its optimal(turn-based) child
+		currNode.setScore(optKid(currNode).getScore());
+	}
+
+	/**
+	    * Returns the optimal child of the passed node, 
+	    * maximizing when children are our turn and minimizing when opps turn.
+	    * @param OthelloTreeNode currNode - the node to select the optimal child for
+	    **/
+	public OthelloTreeNode optKid(OthelloTreeNode currNode){
+
+		OthelloTreeNode toReturn = currNode.getKids().get(0);
+		for (OthelloTreeNode kid : currNode.getKids()){
+			if (currNode.getSide() == mySide) {
+				if (kid.getScore() < toReturn.getScore()){ toReturn = kid;}
+			}
+			else{
+				if (kid.getScore() > toReturn.getScore()){ toReturn = kid;}
 			}
 		}
-		while (bestNode.getParent() != root) { // moving back up to the original move that led to this highest score
-			bestNode = bestNode.getParent();
-		}
-
-		board.move(bestNode.getMove(), mySide);
-
-		return bestNode.getMove();
-		
+		return toReturn;
 	}
-	
-	//arguments: number of tree levels left to complete, current node, side of current node, current board state 
+
+	//arguments: number of tree levels left to complete, current node
 	//current node is defined as the node that has just made a move, we are now looking to fill in it's children, i.e. moves to make after this move
 	//generates tree of nodes starting at root from doMove.
-	private void minimax(int depth, TreeNode currNode, OthelloSide currNodeSide){ 
-		depth -= 1;
-		if (currNode.getBoard().isDone() || !currNode.getBoard().hasMoves(currNodeSide.opposite())){
-			TreeNode dummy;
+	/**
+	    * Returns nothing.
+	    * Recursively generates tree of given depth of possible moves from the node given.
+	    * @param int depth: how many levels of tree to create
+	    * @param OthelloTreeNode currNode: node to populate children of
+	    **/
+	private void generateTree(int depth, OthelloTreeNode currNode) { 
+		depth -= 1; //decrement to keep track of how many levels left to do
+		//checking if game is over or if there are no moves to make
+		if (currNode.getBoard().isDone() || !currNode.getBoard().hasMoves(currNode.getSide().opposite())){
+			//if this is the case, we make a placeholder node with a null move value.
+			//if
+			OthelloTreeNode dummy;
 			double score;
-			if (currNodeSide == mySide) { score = currNode.getScore() + 15; } //if opponent can't move after my move
-			else { score = currNode.getScore() - 15;}//if I can't move after my opponent's move
-			dummy = new TreeNode(currNode, null, currNodeSide.opposite(), score, currNode.getBoard().copy());
+	//		if (currNode.getSide() == mySide) { score = currNode.getScore() + 15; } //if opponent can't move after my move
+	//		else { score = currNode.getScore() - 15;}//if I can't move after my opponent's move
+			dummy = new OthelloTreeNode(currNode, null, currNode.getSide().opposite(), currNode.getScore(), currNode.getBoard().copy(), 0);
 			currNode.addKid(dummy);
-			if (depth > 0){ minimax(depth, dummy, currNodeSide.opposite());}
-			else{leafList.add(dummy);}
+			if (depth > 0){ generateTree(depth, dummy);} //recursive step
 		}
-		else{
+		
+		else{ 
 			Move m;
+			//loop through every position in board
 			for (int x = 0; x < dim; x++){
 				for (int y = 0; y < dim; y++){
 					m = new Move(x, y);
-					if (currNode.getBoard().checkMove(m, currNodeSide.opposite())){ //valid move
+					if (currNode.getBoard().checkMove(m, currNode.getSide().opposite())){ //valid move
+						//if valid move found, make copy of board and make the move on it
 						OthelloBoard boardCpy = currNode.getBoard().copy();
-						double heuristic = boardCpy.moveScore(m, currNodeSide.opposite()); //calculated before move is made on copied board
-						boardCpy.move(m, currNodeSide.opposite());
-						TreeNode kid = new TreeNode(currNode, m, currNodeSide.opposite(), heuristic + currNode.getScore(), boardCpy);
-						currNode.addKid(kid); //have added valid move as child of currNode
+						boardCpy.move(m, currNode.getSide().opposite());
+						double heuristic = boardCpy.boardScore(currNode.getSide().opposite()); //heuristic if this move is made
+						//add node with this new move/board/heuristic as a child of currNode
+						OthelloTreeNode kid = new OthelloTreeNode(currNode, m, currNode.getSide().opposite(), heuristic, boardCpy, 0); //leaving depth as 0 for now
+						currNode.addKid(kid);
 						if (depth > 0){ //if more layers to fill in:
-							minimax(depth, kid, currNodeSide.opposite()); //recursive step
-						}
-						else{ //must be a leaf of our tree, add it to leafList for easy access later
-							leafList.add(kid);
+							generateTree(depth, kid); //recursive step
 						}
 					}
 				}

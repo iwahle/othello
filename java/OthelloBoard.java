@@ -154,7 +154,6 @@ public class OthelloBoard
    
    /**
     * Returns a score for a valid given move.
-    * @param m The move being made
     * @param turn The player making the move.
     **/
    public double boardScore(OthelloSide turn)

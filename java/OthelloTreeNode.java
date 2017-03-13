@@ -32,8 +32,8 @@ class OthelloTreeNode {
 	
 	public OthelloBoard getBoard(){return board;}
 	
-	public void incScore(int increment){ //increments score by increment
-		score += increment;
+	public void setScore(double newScore){
+		score = newScore;
 	}
 	
 	public OthelloSide getSide() {return side;}
@@ -41,4 +41,5 @@ class OthelloTreeNode {
 	public List<OthelloTreeNode> getKids() {return kids;}
 	
 	public int getDepth() {return depth;}
+		
 }
