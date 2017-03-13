@@ -1,28 +1,30 @@
-
 import java.util.*; 
 
-class TreeNode {
-	private TreeNode parent;
-	private List<TreeNode> kids;
+class OthelloTreeNode {
+	private OthelloTreeNode parent;
+	private List<OthelloTreeNode> kids;
 	private Move move;
 	private OthelloSide side;
 	private double score;
 	private OthelloBoard board;
 	
+	private int depth;
+	
 	//arguments: parent node, move made from parent to make this node, side that made said move, cumulative heuristic score
-	public TreeNode(TreeNode p, Move m, OthelloSide si, double s, OthelloBoard b){
+	public OthelloTreeNode(OthelloTreeNode p, Move m, OthelloSide si, double s, OthelloBoard b, int d){
 		parent = p;
 		move = m;
 		side = si;
 		score = s;
 		board = b;
-		kids = new ArrayList<TreeNode>();
+		kids = new ArrayList<OthelloTreeNode>();
+		depth = d;
 	}
-	public void addKid(TreeNode kid){
+	public void addKid(OthelloTreeNode kid){
 		kids.add(kid);
 	}
 	
-	public TreeNode getParent(){ return parent;}
+	public OthelloTreeNode getParent(){ return parent;}
 	
 	public Move getMove(){return move;}
 	
@@ -33,4 +35,10 @@ class TreeNode {
 	public void incScore(int increment){ //increments score by increment
 		score += increment;
 	}
+	
+	public OthelloSide getSide() {return side;}
+	
+	public List<OthelloTreeNode> getKids() {return kids;}
+	
+	public int getDepth() {return depth;}
 }

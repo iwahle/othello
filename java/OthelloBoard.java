@@ -12,6 +12,8 @@ public class OthelloBoard
    BitSet black = new BitSet(64);
    //locations that have any piece.
    BitSet taken = new BitSet(64);
+   
+   int dim = 8;
 
    public boolean occupied(int x, int y) {
       return taken.get(x + 8*y);
@@ -148,6 +150,104 @@ public class OthelloBoard
 	  }
 	  
       return score;
+   }
+   
+   /**
+    * Returns a score for a valid given move.
+    * @param m The move being made
+    * @param turn The player making the move.
+    **/
+   public double boardScore(OthelloSide turn)
+   {
+	   double score = 0.0;
+	   
+	   for (int x = 0; x < dim; x ++) {
+		   for (int y = 0; y < dim; y ++) {
+			   //System.out.println(x + " " + y);
+			   if (get(turn, x, y) == true) {
+				   if (isCornerMove(x,y)) {score += 10;}
+				   else if (isCornerOfCornerMove(x,y)) {score -= 10;}
+				   else if (isGoodEdgeMove(x,y)) {score += 5;}
+				   else if (isEdgeOfCornerMove(x,y)) {score -= 5;}
+				   else {score += 1;}
+			   }
+			   else if (get(turn.opposite(), x, y) == true) {
+				   if (isCornerMove(x,y)) {score -= 10;}
+				   else if (isCornerOfCornerMove(x,y)) {score += 10;}
+				   else if (isGoodEdgeMove(x,y)) {score -= 5;}
+				   else if (isEdgeOfCornerMove(x,y)) {score += 5;}
+				   else {score -= 1;}
+			   }
+		   }
+	   }
+	   
+	   return score;
+   }
+   
+   boolean isCornerMove(int x, int y)
+   {
+	   if (x == 0 && y == 0)
+		   return true;
+	   
+	   if (x == dim-1 && y == dim-1)
+		   return true;
+	   
+	   if (x == dim-1 && y == 0)
+		   return true;
+	   
+	   if (x == 0 && y == dim-1)
+		   return true;
+	   
+	   return false;
+   }
+   
+   boolean isCornerOfCornerMove(int x, int y) {
+	   if (x == 1 && y == 1)
+		   return true;
+	   
+	   if (x == dim-2 && y == dim-2)
+		   return true;
+	   
+	   if (x == dim-2 && y == 1)
+		   return true;
+	   
+	   if (x == 1 && y == dim-2)
+		   return true;
+	   
+	   return false;
+   }
+   
+   boolean isGoodEdgeMove(int x, int y) {
+	   
+	   if (x == 0 && (y > 1 && y < dim-2))
+		   return true;
+	   
+	   if (x == dim-1 && (y > 1 && y < dim-2))
+		   return true;
+	   
+	   if (y == 0 && (x > 1 && x < dim-2))
+		   return true;
+	   
+	   if (y == dim-1 && (x > 1 && x < dim-2))
+		   return true;
+	   
+	   return false;
+   }
+   
+   boolean isEdgeOfCornerMove(int x, int y) {
+	   if ((x == 1 && y == 0) || (x == 0 && y == 1))
+		   return true;
+	   
+	   if ((x == dim-2 && y == 0) || (x == 0 && y == dim-2))
+		   return true;
+	   
+	   if ((x == 1 && y == dim-1) || (x == dim-1 && y == 1))
+		   return true;
+	   
+	   if ((x == dim-1 && y == dim-2) || (x == dim-2 && y == dim-1))
+		   return true;
+	   
+	   return false;
    }
    
    /**

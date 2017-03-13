@@ -31,7 +31,9 @@ public class TestGame {
             	players[i] = new GoodPlayer();
             } else if(args[i].equalsIgnoreCase("Minimax")) { // implements minimax algorithm
             	players[i] = new MinimaxPlayer();
-            } else {
+            } else if(args[i].equalsIgnoreCase("ABPruningPlayer")) { // implements AB Pruning algorithm
+            	players[i] = new ABPruningPlayer();
+            }else {
                 players[i] = new WrapperPlayer(args[i]);
             }             
         }
