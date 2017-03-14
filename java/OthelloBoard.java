@@ -179,7 +179,6 @@ public class OthelloBoard
 			   }
 		   }
 	   }
-	   
 	   return score;
    }
    

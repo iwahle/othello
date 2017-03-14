@@ -6,7 +6,7 @@ I wrote the base player that played the game at minimal functionality. To do thi
 
 Rupesh:
 
-I helped to create the heuristic that this program uses. I initially created a heuristic in which a particular move on a board is given a score and that score is taken as the comparable value. Later (in assignment 2) I learned that it would be better to take the heuristic as a property of the board itself. In this way, we do not have to pass a certain move to the board to get it’s heuristic. We can know how preferable a board is by simply calling this function on the board itself. I also created the GoodPlayer object which uses the heuristic to beat SimplePlayer. I then implemented alphabeta pruning to improve our algorithm's time efficiency.
+I helped to create the heuristic that this program uses. I initially created a heuristic in which a particular move on a board is given a score and that score is taken as the comparable value. Later (in assignment 2) I learned that it would be better to take the heuristic as a property of the board itself. In this way, we do not have to pass a certain move to the board to get it’s heuristic. We can know how preferable a board is by simply calling this function on the board itself. I also created the GoodPlayer object which uses the heuristic to beat SimplePlayer. I then attempted to implement alpha beta pruning in order to make our program more efficient, but it ended up extending our run time because I could not integrate it with our generateTree function.
 
 ———————————
 
@@ -16,4 +16,4 @@ Okay so the first time around, we accidentally programmed our AI with a misunder
 
 This next time around, we sat down and thought of how to fix this and decided to use a more appropriate heuristic. Since our algorithm was recursive, we were able to rapidly improve the speed of our AI by simply increasing the depth of our tree and it beat better player on the first run with a depth of 5 with a minimal time increase. 
 
-We tried three more approaches to improve our time efficiency. The first two were implementing principal variation search and multithreading the generation of our tree. Though we weren't able to get these running, we've included the code in our submission. We also imiplemented alphabeta pruning, which works and is included in our submission as well.
+We tried three more approaches to improve our time efficiency. Specifically, we worked onimplementing principal variation search, multithreading the generation of our tree, and alphabeta pruning. Though we weren't able to get these running, we've included the code in our submission.
