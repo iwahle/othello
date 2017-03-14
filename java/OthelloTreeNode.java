@@ -7,7 +7,6 @@ class OthelloTreeNode {
 	private OthelloSide side;
 	private double score;
 	private OthelloBoard board;
-	
 	private int depth;
 	
 	//arguments: parent node, move made from parent to make this node, side that made said move, cumulative heuristic score

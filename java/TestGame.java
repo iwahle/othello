@@ -33,6 +33,10 @@ public class TestGame {
             	players[i] = new MinimaxPlayer();
             } else if(args[i].equalsIgnoreCase("ABPruningPlayer")) { // implements AB Pruning algorithm
             	players[i] = new ABPruningPlayer();
+            } else if(args[i].equalsIgnoreCase("PVS")) { // implements AB Pruning algorithm
+            	players[i] = new PVSPlayer();
+            } else if(args[i].equalsIgnoreCase("CompetitionPlayer")) { // implements AB Pruning algorithm
+            	players[i] = new CompetitionPlayer();
             }else {
                 players[i] = new WrapperPlayer(args[i]);
             }             

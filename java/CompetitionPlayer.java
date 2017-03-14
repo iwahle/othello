@@ -1,7 +1,7 @@
 
 
 
-class MinimaxPlayer implements OthelloPlayer {
+class CompetitionPlayer implements OthelloPlayer {
 
 	private OthelloBoard board;
 	private int dim = 8;
@@ -49,7 +49,7 @@ class MinimaxPlayer implements OthelloPlayer {
 		//make node with opps move
 		OthelloTreeNode root = new OthelloTreeNode(null, opponentsMove, mySide.opposite(), 0, board, 0); //left depth as 0 for now
 		//create tree of given depth with opps move node as root
-		generateTree(3, root);
+		generateTree(5, root);
 		//traverse tree in post order updating scores
 		tallyScores(root); //update all scores based on optimized children
 		//find child from root with best score to return move of
